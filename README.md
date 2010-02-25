@@ -17,6 +17,18 @@ an example on which to build your own. As long as the provider has access to the
 object, any sort of medium can be used for play.
 
 
+Changes from Zombies! 1
+-----------------------
+
+This is by no means a complete list, but it does strive to give an accurate
+overview of what you'll be looking at.
+
+* __Revamped damage system__ that is both more concise ("right arm is gone"
+  instead of a lot of subparts) and more parts
+* __Updated map files__ that are easier to write and read, while still holding
+  all the features needed.
+
+
 Tests
 -----
 
