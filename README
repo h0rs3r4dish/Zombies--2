@@ -15,3 +15,15 @@ a decent frontend. There *is* a simple console that can be run via:
 This provides a simple wrapper for the Zombies::Game class, and can be seen as
 an example on which to build your own. As long as the provider has access to the
 object, any sort of medium can be used for play.
+
+
+Tests
+-----
+
+There are some unit tests included that were used while writing the classes. The
+code can be found in the `tests/` directory, and they can be run via the `test`
+script:
+
+	$ ruby bin/test [name]
+	
+...Where `name` is one of the tests, or just "all" to run the whole directory.

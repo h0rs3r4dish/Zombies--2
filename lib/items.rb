@@ -1,5 +1,5 @@
 =begin
-lib/parsers/map.rb -- Map file parser
+lib/items.rb -- Creature spec metaclass
 =end
 
 module Zombies
@@ -8,7 +8,7 @@ module Zombies
 	
 	end
 	
-	class Map
+	class Item
 	
 	end
 	

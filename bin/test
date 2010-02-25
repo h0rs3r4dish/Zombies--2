@@ -1,0 +1,17 @@
+#!/usr/bin/ruby
+
+testname = ARGV.first or 'all'
+
+def test(text,&block)
+	print text + '...'
+	block.call
+	puts "OK"
+end
+
+if testname == 'all' then
+	Dir['test/*'].each { |file|
+		load file		
+	}
+else
+	load "test/%s.rb" % testname
+end
