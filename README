@@ -1,0 +1,17 @@
+Zombies! 2
+==========
+
+The successor to the Zombies! IRC game (run by the Quander bot), this is a more
+advanced and platform-independant derivative.
+
+Usage
+-----
+
+This project isn't meant to be used as-is. Maps should be added, as well as
+a decent frontend. There *is* a simple console that can be run via:
+
+	$ ruby bin/console
+	
+This provides a simple wrapper for the Zombies::Game class, and can be seen as
+an example on which to build your own. As long as the provider has access to the
+object, any sort of medium can be used for play.
