@@ -20,13 +20,17 @@ while gets
 				puts <<endHelp
 Zombies! 2 demo console, running version #{Zombies::VERSION}
 Commands:
-  add-map <c>:<n>   Add a map to the rotation (format: "campaign:map_name")
-  add-player <n>    Adds the player 'n' to the game
-  eval <code>       Evaluate Ruby code from the console (if enabled)
-  help              Show this message
-  player-list       Lists the players currently in the game
-  remove-player <n> Removes 'n' from the game
-  start-game        Start the game
+  add-map <c>:<n>      Add a map to the rotation (format: "campaign:map_name")
+  add-player <n>       Adds the player 'n' to the game
+  eval <code>          Evaluate Ruby code from the console (if enabled)
+  get-pref <p> <n>     Shows the preference 'n' for player 'p'
+  help                 Show this message
+  map-list             Display the current map playlist
+  player-list          Lists the players currently in the game
+  set-pref <p> <n> <v> Sets 'n' to 'v' for player 'p'
+  remove-player <n>    Removes 'n' from the game
+  start-game           Start the game
+  unset-pref <p> <n>   Removes the setting 'n' for player 'p'
 endHelp
 			when /^add-map (.+)$/
 				d = $1.split(':')
@@ -76,9 +80,39 @@ endHelp
 				else
 					puts "Could not remove player from the game."
 				end
+			when /^set-pref ([^\s]+) ([^\s]+) (.+)$/
+				ret = $zombies.player_pref_set($1,$2,$3)
+				if ret then
+					puts "'%s' to '%s' for %s" % (ret[1..2] + [ret.first])
+				else
+					puts "No such player."
+				end
+			when /^unset-pref ([^\s]+) ([^\s]+)$/
+				ret = $zombies.player_pref_unset($1,$2)
+				if ret then
+					puts "Unset '%s' for %s" % ret.reverse
+				else
+					puts "No such key or player."
+				end
+			when /^get-pref ([^\s]+) ([^\s]+)$/
+				ret = $zombies.player_pref_fetch($1, $2)
+				if ret then
+					puts "'%s' is '%s'" % [$2, ret]
+				else
+					puts "No such player or setting."
+				end				
 			when /^start-game$/
-				$ingame = true
-				$zombies.start_game
+				ret = $zombies.load_next_map
+				if ret then
+					$ingame = true
+					puts "Loading map %s...\n\n" % ret.last
+					$zombies.map_setup
+					text = $zombies.get_map_pregame
+					puts text.first
+					puts "\nObjective: %s" % text.last
+				else
+					puts "No maps/players in the game."
+				end
 			when /^player-list$/
 				puts $zombies.list_players.join(', ')
 		end

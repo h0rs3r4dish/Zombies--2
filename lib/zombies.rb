@@ -7,10 +7,10 @@ module Zombies
 	VERSION = "0.1"
 
 	class Game
-		attr_reader :playlist
 		def initialize
 			@playlist = []
 			@players = { }
+			@prefs = { }
 			@zombies = { }
 			@map = nil
 		end
@@ -59,11 +59,20 @@ module Zombies
 			}
 			return suggestions
 		end
+		def list_maps
+			return @playlist
+		end
 		def load_next_map
-			return false unless @playlist.length > 0
+			return false unless @playlist.length > 0 and @players.length > 0
 			nxt = @playlist.pop
-			@map = MapParser.new(nxt).run()
+			@map = MapParser.new(*nxt).run()
 			return nxt
+		end
+		def map_setup
+		
+		end
+		def get_map_pregame
+			return [@map.start_text, @map.objective]
 		end
 		
 		def add_player(name)
@@ -78,6 +87,22 @@ module Zombies
 		end
 		def list_players
 			return @players.keys
+		end
+		
+		def player_pref_set(player,key,value)
+			return false if not @players.key? player
+			@prefs[player] = Hash.new if not @prefs.key? player
+			@prefs[player][key] = value
+			return [player, key, value]
+		end
+		def player_pref_unset(player,k)
+			return false if not @prefs.key? player or not @prefs[player].key? k
+			@prefs[player].delete k
+			return [player, k]
+		end
+		def player_pref_fetch(player,k)
+			return false if not @prefs.key? player or not @prefs[player].key? k
+			return @prefs[player][k]
 		end
 	end
 	
