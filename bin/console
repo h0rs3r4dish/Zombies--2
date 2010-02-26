@@ -6,27 +6,86 @@ $zombies = Zombies::Game.new
 
 puts "Zombies! 2 -- demo game console" % Zombies::VERSION
 
-$ingame = false
+$ingame  = false
 
 print "% "
 while gets
 	line = $_
-	case line
-		when /^help$/
-			puts <<endHelp
+	Process.exit if line =~ /^exit$/
+	if line =~ /^eval (.+)$/; then; begin; puts eval($1); rescue; end; end
+	# ^ comment that line out to disable the "eval" code execution command
+	if not $ingame then
+		case line
+			when /^help$/
+				puts <<endHelp
 Zombies! 2 demo console, running version #{Zombies::VERSION}
 Commands:
-  addmap <name>  Add a map to the rotation (format: "campaign:map_name")
-  help           Show this message
+  add-map <c>:<n>   Add a map to the rotation (format: "campaign:map_name")
+  add-player <n>    Adds the player 'n' to the game
+  eval <code>       Evaluate Ruby code from the console (if enabled)
+  help              Show this message
+  player-list       Lists the players currently in the game
+  remove-player <n> Removes 'n' from the game
+  start-game        Start the game
 endHelp
-		when /^addmap (.+)$/
-			d = $1.split(':')
-			ret = $zombies.add_map(d.first,d.last)
-			if ret then
-				puts "Added map %s" % d.last
-			else
-				puts "No such campaign/map combination '%s' -> '%s'" % d
-			end
+			when /^add-map (.+)$/
+				d = $1.split(':')
+				if d.length == 1 then
+					ret = $zombies.add_campaign(d.first)
+					if ret then
+						puts "Added campaign %s" % ret
+					else
+						puts "Could not add campaign '%s'" % d.first
+					end
+				else
+					ret = $zombies.add_map(*d)
+					if ret then
+						puts "Added map %s" % d.last
+					else
+						puts "No such campaign/map combination '%s' -> '%s'" % d
+					end
+				end
+			when /^remove-map (.+)$/
+				d = $1.split(':')
+				if d.length == 1
+					ret = $zombies.remove_campaign(d.first)
+					puts "Removed %d maps from the playlist." % ret
+				else
+					ret = $zombies.remove_map(*d)
+					if ret.length == 2 and ret.first.class == String then
+						puts "Removed map %s." % ret.join(':')
+					else
+						if ret.length == 0 then
+							puts "Couldn't remove that map."
+						else
+							puts "Did you mean: %s" % ret.map { |m| m.join(':') }.join(', ')
+						end
+					end
+				end
+			when /^add-player (.+)$/
+				ret = $zombies.add_player($1)
+				if ret then
+					puts "Added player %s to the game." % ret
+				else
+					puts "Could not add player to game."
+				end
+			when /^remove-player (.+)$/
+				ret = $zombies.remove_player($1)
+				if ret then
+					puts "Removed %s from the game." % ret
+				else
+					puts "Could not remove player from the game."
+				end
+			when /^start-game$/
+				$ingame = true
+				$zombies.start_game
+			when /^player-list$/
+				puts $zombies.list_players.join(', ')
+		end
+	else
+		case line
+			when //
+		end
 	end
 	print "% "
 end
