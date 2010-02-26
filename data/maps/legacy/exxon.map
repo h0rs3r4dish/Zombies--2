@@ -1,0 +1,40 @@
+start-text: You find yourselves on a street corner, staring at a broken down Exxon gas station. The place appears to be covered in zombies. A radio you found said the military is sending troops to help people out of zombie-infested areas, but they won't be here for a while.
+
+objective: Clear out the Exxon and hold your position in the building until help arrives. You've failed if there's a zombie in the gas station when the timer's up.
+
+conditions:
+	time-limit: 20
+	no-zombies-in: 02, 03
+	spawn-zombies: 01
+	spawn-frequency: 4
+
+start-location: 01
+
+area 01:
+	name: Street
+	desc: The Exxon's normally lit sign is dark, and many of the building's windows are shattered inwards. Trash litters the ground.
+	zombies: none
+	items: 1 melee, ammo
+	east: 02
+	
+area 02:
+	name: Inside
+	desc: Shelves are overturned, and the refrigerators lining the walls are long since dead. A gruesome blood splatter adorns the station's counter.
+	zombies: 1
+	north: 03
+	east: 04
+	weast: 01
+
+area 03:
+	name: Bathroom
+	desc: This grimy bathroom needs a cleaning. The sink is broken and gushing water onto the tiled floor, and shredded toilet paper is everywhere.
+	zombies: none
+	items: 1 gun with ammo
+	south: 02
+	
+area 04:
+	name: Out Back
+	desc: Grass grows in patches through the cracks in the concrete. The dumpsters lie overturned on the ground.
+	zombies: 2
+	items: 1 melee
+	west: 02

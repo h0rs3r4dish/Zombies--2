@@ -2,6 +2,31 @@
 
 require "zombies-two.rb"
 
-game = Zombies::Game.new
+$zombies = Zombies::Game.new
 
-puts "Zombies! 2 -- demo game console\n(version %s)" % Zombies::VERSION
+puts "Zombies! 2 -- demo game console" % Zombies::VERSION
+
+$ingame = false
+
+print "% "
+while gets
+	line = $_
+	case line
+		when /^help$/
+			puts <<endHelp
+Zombies! 2 demo console, running version #{Zombies::VERSION}
+Commands:
+  addmap <name>  Add a map to the rotation (format: "campaign:map_name")
+  help           Show this message
+endHelp
+		when /^addmap (.+)$/
+			d = $1.split(':')
+			ret = $zombies.add_map(d.first,d.last)
+			if ret then
+				puts "Added map %s" % d.last
+			else
+				puts "No such campaign/map combination '%s' -> '%s'" % d
+			end
+	end
+	print "% "
+end

@@ -19,7 +19,22 @@ module Zombies
 			@players = { }
 			@zombies = { }
 			@map = nil
-		end	
+		end
+		def add_map(*metadata)
+			Dir["data/maps/"+metadata.first+"/*"].each { |e|
+				if e =~ /#{metadata.last}.map$/ then
+					@playlist.push metadata
+					return metadata
+				end
+			}
+			return false
+		end
+		def load_next_map
+			return false unless @playlist.length > 0
+			nxt = @playlist.pop
+			@map = MapParser.new(nxt).run()
+			return nxt
+		end
 	end
 	
 end
