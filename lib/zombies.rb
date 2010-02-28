@@ -75,10 +75,34 @@ module Zombies
 				items = Array.new
 				list = loc[:item_template]
 				list.each { |template|
-					
+					count = 1; type = template
+					if template =~ /^([0-9]+) (.+)$/ then
+						count = $1.to_i; type = $2
+					end
+					count.times {
+						itm = nil
+						case template.downcase
+							when "weapon"
+								itm = generate_weapon
+							when "melee"
+								itm = generate_weapon :melee
+							when "gun"
+								itm = generate_weapon :ranged
+							when "ammo"
+								itm = generate_ammo
+							when "gun with ammo"
+								itm = generate_weapon :ranged
+								list.push itm
+								itm = generate_ammo itm.ammo
+						end
+						list.push itm
+					}
 				}
 				loc[:items] = items
 			}
+			
+			# Generate zombies
+			
 		end
 		def get_map_pregame
 			return { :start_text => @map.start_text,
