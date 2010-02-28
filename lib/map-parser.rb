@@ -5,6 +5,7 @@ lib/map-parser.rb -- Map file parser
 module Zombies
 
 	class MapParser
+		attr_reader :map
 		def initialize(*metainfo)
 			@file = "data/maps/%s/%s.map" % metainfo
 			@map = Map.new
@@ -24,7 +25,7 @@ module Zombies
 					when /^start-location: ([0-9]+)$/
 						@map.start_loc = $1
 					when /^area ([0-9]+):/
-						@map.map[id] = loc
+						@map.map[id] = loc unless id == ''
 						loc = Hash.new
 						id = $1
 					when /^zombies: (.+)$/
@@ -35,6 +36,7 @@ module Zombies
 						loc[$1.intern] = $2
 				end
 			}
+			@map.map[id] = loc
 		end
 		def run
 			parse( load )
