@@ -16,6 +16,7 @@ module Zombies
 				:head => [ :neck, :face ],
 				:torso => [ :head ]
 			}
+			@stats = Hash.new
 		end
 		def limbs(h)
 			h.each_pair do |lim, arr|
