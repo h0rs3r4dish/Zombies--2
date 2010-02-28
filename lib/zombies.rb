@@ -4,7 +4,7 @@ lib/zombies.rb -- Game core
 
 module Zombies
 
-	VERSION = "0.1"
+	VERSION = "0.2"
 
 	class Game
 		def initialize
@@ -65,14 +65,24 @@ module Zombies
 		def load_next_map
 			return false unless @playlist.length > 0 and @players.length > 0
 			nxt = @playlist.pop
-			@map = MapParser.new(*nxt).run()
+			@map = MapParser.new(*nxt).run
 			return nxt
 		end
 		def map_setup
-		
+			# Go through the map's item templates & create the items
+			@map.map.each_value { |loc|
+				next unless loc.key? :item_template
+				items = Array.new
+				list = loc[:item_template]
+				list.each { |template|
+					
+				}
+				loc[:items] = items
+			}
 		end
 		def get_map_pregame
-			return [@map.start_text, @map.objective]
+			return { :start_text => @map.start_text,
+				:objective => @map.objective }
 		end
 		
 		def add_player(name)

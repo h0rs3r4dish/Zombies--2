@@ -108,8 +108,8 @@ endHelp
 					puts "Loading map %s...\n\n" % ret.last
 					$zombies.map_setup
 					text = $zombies.get_map_pregame
-					puts text.first
-					puts "\nObjective: %s" % text.last
+					puts text[:start_text]
+					puts "\nObjective: %s" % text[:objective]
 				else
 					puts "No maps/players in the game."
 				end
