@@ -70,6 +70,16 @@ backend of Zombies! 2. Modified copies might not stick to this list.
   rifle is at least automatic. Fires 5.56mm NATO rounds.
 * __Shotgun__ The classic gun for any wannabe zombie hunter. High damage and a
   critical that rivals the Chainsaw.
+  
+### Ammunition
+
+* __9mm rounds__ Low-impact pistol rounds. Used by the Pistol and the Uzi.
+* __.308 Winchester rounds__ Low-caliber but high-velocity hunting bullets. The
+  Hunting Rifle fires them.
+* __5.56mm NATO rounds__ Standard-issue combat ammunition. Fired by the Assault
+  Rifle.
+* __Buckshot__ 12-gauge shotgun shells that pack a lot of damage into a little
+  casing. Only used by the Shotgun.
 
 
 Appendicies
