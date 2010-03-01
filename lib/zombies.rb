@@ -69,40 +69,49 @@ module Zombies
 			return nxt
 		end
 		def map_setup
-			# Go through the map's item templates & create the items
-			@map.map.each_value { |loc|
-				next unless loc.key? :item_template
-				items = Array.new
-				list = loc[:item_template]
-				list.each { |template|
-					count = 1; type = template
-					if template =~ /^([0-9]+) (.+)$/ then
-						count = $1.to_i; type = $2
-					end
-					count.times {
-						itm = nil
-						case template.downcase
-							when "weapon"
-								itm = generate_weapon
-							when "melee"
-								itm = generate_weapon :melee
-							when "gun"
-								itm = generate_weapon :ranged
-							when "ammo"
-								itm = generate_ammo
-							when "gun with ammo"
-								itm = generate_weapon :ranged
-								list.push itm
-								itm = generate_ammo itm.ammo
+			@map.map.each_pair { |name, loc|
+				if loc.key? :item_template then
+					# Go through the map's item templates & create the items
+					items = Array.new
+					list = loc[:item_template]
+					list.each { |template|
+						count = 1; type = template
+						if template =~ /^([0-9]+) (.+)$/ then
+							count = $1.to_i; type = $2
 						end
-						list.push itm
+						count.times {
+							itm = nil
+							case template.downcase
+								when "weapon"
+									itm = generate_weapon
+								when "melee"
+									itm = generate_weapon :melee
+								when "gun"
+									itm = generate_weapon :ranged
+								when "ammo"
+									itm = generate_ammo
+								when "gun with ammo"
+									itm = generate_weapon :ranged
+									items.push itm
+									itm = generate_ammo itm.ammo
+							end
+							items.push itm
+						}
 					}
-				}
-				loc[:items] = items
+					loc[:items] = items
+				end
+				if loc.key? :zombies and loc[:zombies] > 0 then
+					spawn_zombie(name,loc[:zombies])
+				end
 			}
-			
-			# Generate zombies
-			
+			@players.each_pair { |name, char|
+				prefs = @prefs[name]
+				weapp = :random
+				weapp = prefs['starting-weapon'].intern if prefs.key? 'starting-weapon' and %w{random melee ranged}.include? prefs['starting-weapon']
+				weap = generate_weapon(weapp)
+				char.push_item(weap)
+				char.push_item generate_ammo(weap.ammo, rand(15)+5) if weap.range == :ranged
+			}	
 		end
 		def get_map_pregame
 			return { :start_text => @map.start_text,
@@ -112,6 +121,7 @@ module Zombies
 		def add_player(name)
 			return false if @players.key? name
 			@players[name] = Human.new
+			@prefs[name] = Hash.new
 			return name
 		end
 		def remove_player(name)
@@ -137,6 +147,17 @@ module Zombies
 		def player_pref_fetch(player,k)
 			return false if not @prefs.key? player or not @prefs[player].key? k
 			return @prefs[player][k]
+		end
+		
+		def spawn_zombie(id, count=1)
+			count.times do
+				name = "z%03d" % (rand(999)+1)
+				@zombies[name] = Human.new
+			end
+		end
+		
+		def player_inventory(name)
+			return (@players.key? name) ? @players[name].inventory : false
 		end
 	end
 	

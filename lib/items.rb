@@ -33,12 +33,18 @@ module Zombies
 			weapon = Weapon.new(*details)
 			return weapon
 		end
-		def generate_ammo(type = :random)
+		def generate_ammo(type = :random, amount=1)
 			if type == :random then
-				return Ammo.new(*Items[:ammo][rand(Items[:ammo].length)])
+				a = Ammo.new(*Items[:ammo][rand(Items[:ammo].length)])
+				a.count = amount
+				return a
 			else
 				Items[:ammo].each { |ammo|
-					return Ammo.new(*ammo) if ammo.last == type
+					if ammo.last == type then
+						a = Ammo.new(*ammo) 
+						a.count = amount
+						return a
+					end
 				}
 			end
 		end

@@ -10,14 +10,16 @@ $ingame  = false
 
 print "% "
 while gets
-	line = $_
-	Process.exit if line =~ /^exit$/
-	if line =~ /^eval (.+)$/; then; begin; puts eval($1); rescue; end; end
-	# ^ comment that line out to disable the "eval" code execution command
-	if not $ingame then
-		case line
-			when /^help$/
-				puts <<endHelp
+	inp = $_
+	inp = (inp.include? ';') ? inp.split(';').map { |l| l.strip } : [ inp ]
+	inp.each { |line|
+		Process.exit if line =~ /^exit$/
+		if line =~ /^eval (.+)$/; then; begin; puts eval($1); rescue; end; end
+		# ^ comment that line out to disable the "eval" code execution command
+		if not $ingame then
+			case line
+				when /^help$/
+					puts <<endHelp
 Zombies! 2 demo console, running version #{Zombies::VERSION}
 Commands:
   add-map <c>:<n>      Add a map to the rotation (format: "campaign:map_name")
@@ -31,95 +33,111 @@ Commands:
   remove-player <n>    Removes 'n' from the game
   start-game           Start the game
   unset-pref <p> <n>   Removes the setting 'n' for player 'p'
+  
+Separate multiple commands with a semicolon ';' to have them on the same line.
+This console is released under the same terms as Zombies! 2, the MIT license.
+(c) 2010 Chris "hr4dish" Sz. Get the source at github.com/h0rs3r4dish/Zombies--2
 endHelp
-			when /^add-map (.+)$/
-				d = $1.split(':')
-				if d.length == 1 then
-					ret = $zombies.add_campaign(d.first)
-					if ret then
-						puts "Added campaign %s" % ret
-					else
-						puts "Could not add campaign '%s'" % d.first
-					end
-				else
-					ret = $zombies.add_map(*d)
-					if ret then
-						puts "Added map %s" % d.last
-					else
-						puts "No such campaign/map combination '%s' -> '%s'" % d
-					end
-				end
-			when /^remove-map (.+)$/
-				d = $1.split(':')
-				if d.length == 1
-					ret = $zombies.remove_campaign(d.first)
-					puts "Removed %d maps from the playlist." % ret
-				else
-					ret = $zombies.remove_map(*d)
-					if ret.length == 2 and ret.first.class == String then
-						puts "Removed map %s." % ret.join(':')
-					else
-						if ret.length == 0 then
-							puts "Couldn't remove that map."
+				when /^add-map (.+)$/
+					d = $1.split(':')
+					if d.length == 1 then
+						ret = $zombies.add_campaign(d.first)
+						if ret then
+							puts "Added campaign %s" % ret
 						else
-							puts "Did you mean: %s" % ret.map { |m| m.join(':') }.join(', ')
+							puts "Could not add campaign '%s'" % d.first
+						end
+					else
+						ret = $zombies.add_map(*d)
+						if ret then
+							puts "Added map %s" % d.last
+						else
+							puts "No such campaign/map combination '%s' -> '%s'" % d
 						end
 					end
-				end
-			when /^add-player (.+)$/
-				ret = $zombies.add_player($1)
-				if ret then
-					puts "Added player %s to the game." % ret
-				else
-					puts "Could not add player to game."
-				end
-			when /^remove-player (.+)$/
-				ret = $zombies.remove_player($1)
-				if ret then
-					puts "Removed %s from the game." % ret
-				else
-					puts "Could not remove player from the game."
-				end
-			when /^set-pref ([^\s]+) ([^\s]+) (.+)$/
-				ret = $zombies.player_pref_set($1,$2,$3)
-				if ret then
-					puts "'%s' to '%s' for %s" % (ret[1..2] + [ret.first])
-				else
-					puts "No such player."
-				end
-			when /^unset-pref ([^\s]+) ([^\s]+)$/
-				ret = $zombies.player_pref_unset($1,$2)
-				if ret then
-					puts "Unset '%s' for %s" % ret.reverse
-				else
-					puts "No such key or player."
-				end
-			when /^get-pref ([^\s]+) ([^\s]+)$/
-				ret = $zombies.player_pref_fetch($1, $2)
-				if ret then
-					puts "'%s' is '%s'" % [$2, ret]
-				else
-					puts "No such player or setting."
-				end				
-			when /^start-game$/
-				ret = $zombies.load_next_map
-				if ret then
-					$ingame = true
-					puts "Loading map %s...\n\n" % ret.last
-					$zombies.map_setup
-					text = $zombies.get_map_pregame
-					puts text[:start_text]
-					puts "\nObjective: %s" % text[:objective]
-				else
-					puts "No maps/players in the game."
-				end
-			when /^player-list$/
-				puts $zombies.list_players.join(', ')
+				when /^remove-map (.+)$/
+					d = $1.split(':')
+					if d.length == 1
+						ret = $zombies.remove_campaign(d.first)
+						puts "Removed %d maps from the playlist." % ret
+					else
+						ret = $zombies.remove_map(*d)
+						if ret.length == 2 and ret.first.class == String then
+							puts "Removed map %s." % ret.join(':')
+						else
+							if ret.length == 0 then
+								puts "Couldn't remove that map."
+							else
+								puts "Did you mean: %s" % ret.map { |m| m.join(':') }.join(', ')
+							end
+						end
+					end
+				when /^add-player (.+)$/
+					ret = $zombies.add_player($1)
+					if ret then
+						puts "Added player %s to the game." % ret
+					else
+						puts "Could not add player to game."
+					end
+				when /^remove-player (.+)$/
+					ret = $zombies.remove_player($1)
+					if ret then
+						puts "Removed %s from the game." % ret
+					else
+						puts "Could not remove player from the game."
+					end
+				when /^set-pref ([^\s]+) ([^\s]+) (.+)$/
+					ret = $zombies.player_pref_set($1,$2,$3)
+					if ret then
+						puts "'%s' to '%s' for %s" % (ret[1..2] + [ret.first])
+					else
+						puts "No such player."
+					end
+				when /^unset-pref ([^\s]+) ([^\s]+)$/
+					ret = $zombies.player_pref_unset($1,$2)
+					if ret then
+						puts "Unset '%s' for %s" % ret.reverse
+					else
+						puts "No such key or player."
+					end
+				when /^get-pref ([^\s]+) ([^\s]+)$/
+					ret = $zombies.player_pref_fetch($1, $2)
+					if ret then
+						puts "'%s' is '%s'" % [$2, ret]
+					else
+						puts "No such player or setting."
+					end				
+				when /^start-game$/
+					ret = $zombies.load_next_map
+					if ret then
+						$ingame = true
+						puts "Loading map %s...\n\n" % ret.last
+						$zombies.map_setup
+						text = $zombies.get_map_pregame
+						puts text[:start_text]
+						puts "\nObjective: %s" % text[:objective]
+					else
+						puts "No maps/players in the game."
+					end
+				when /^player-list$/
+					puts $zombies.list_players.join(', ')
+			end
+		else
+			case line
+				when /^inventory (.+)$/
+					ret = $zombies.player_inventory($1)
+					if not ret then
+						puts "No such player."
+					else
+						puts ret.map { |i| case i.type
+							when :weapon
+								i.name
+							when :ammo
+								i.name + (" x%d" % i.count)
+						end }.join(', ')
+					end
+			end
 		end
-	else
-		case line
-			when //
-		end
-	end
+	}
 	print "% "
 end
