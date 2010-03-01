@@ -6,6 +6,7 @@ Table of Contents
 
 * Introduction
 * Day-To-Day Basics
+* Equipment
 * Appendix A: Preferences
 * Appendix B: Map Making
 
@@ -40,6 +41,35 @@ you should grasp tightly at all times. This entails:
   and weapons (why have on machete when you can have two?)
 * Watch your entrances and exits. Keep an escape route in mind so when you start
   getting overwhelmed by zombies.
+  
+
+Equipment
+---------
+
+This is a comprehensive list of all the weapons and items included in the core
+backend of Zombies! 2. Modified copies might not stick to this list.
+
+### Melee Weapons
+
+* __Switchblade__ Pretty much a joke of a knife. Don't expect to do any real
+  damage with it.
+* __Machete__ *This* is a real knife. Decent blade that's a good backup weapon.
+* __Axe__ A heftier weapon that hits more often, but with a low critical.
+* __Chainsaw__ The ultimate zombie-killing device. High chance of hitting, and
+  the highest critical range for any weapon
+
+### Ranged Weapons
+
+* __Pistol__ Your basic weapon, a good sidearm. Not very impressive by any means.
+  Fires 9mm bullets.
+* __Uzi__ Basically an automatic Pistol, slightly less accurate. Shares 9mm
+  rounds with its cousin.
+* __Hunting Rifle__ A high-power and accurate rifle that fires .308 Winchester
+  bullets.
+* __Assualt Rifle__ Less accurate and powerful than the hunting version, this
+  rifle is at least automatic. Fires 5.56mm NATO rounds.
+* __Shotgun__ The classic gun for any wannabe zombie hunter. High damage and a
+  critical that rivals the Chainsaw.
 
 
 Appendicies

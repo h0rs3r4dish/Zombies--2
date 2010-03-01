@@ -12,11 +12,11 @@ module Zombies
 			[ "Chainsaw", [7,13], :melee ]
 		],
 		:ranged => [
-			[ "Pistol", [13,19], :ranged, :'9mm' ],
-			[ "Uzi", [9,19], :ranged, :'9mm', { :autofire => true } ],
+			[ "Pistol", [9,19], :ranged, :'9mm' ],
+			[ "Uzi", [13,19], :ranged, :'9mm', { :autofire => true } ],
 			[ "Hunting Rifle", [10,15], :ranged, :'308' ],
 			[ "Assault Rifle", [9,17], :ranged, :NATO, { :autofire => true } ],
-			[ "Shotgun", [10,13], :ranged, :buckshot ]
+			[ "Shotgun", [10,14], :ranged, :buckshot ]
 		],
 		:ammo => [
 			[ "9mm rounds", :'9mm' ],
