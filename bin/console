@@ -121,6 +121,8 @@ endHelp
 					end
 				when /^player-list$/
 					puts $zombies.list_players.join(', ')
+				else
+					puts "Unrecognized command"
 			end
 		else
 			case line
@@ -136,6 +138,8 @@ endHelp
 								i.name + (" x%d" % i.count)
 						end }.join(', ')
 					end
+				else
+					puts "Unrecognized command"
 			end
 		end
 	}
