@@ -15,6 +15,8 @@ $maptext = <<eof
 start-text: #{$test[:start_text]}
 objective: #{$test[:objective]}
 start-location: #{$test[:start_loc]}
+conditions:
+	time-limit: 10
 area 01:
 	zombies: none
 	weapons: none
@@ -34,6 +36,11 @@ test "Verify $test contents" do
 		rv = $parser.map[k]
 		raise "%s is '%s', should be '%s'" % [k,rv,v] unless rv == v
 	}
+end
+
+test "Verify conditions" do
+	time = $parser.map.conditions[:time_limit]
+	raise "time-limit is '%s', should have been 10" % time unless time == 10
 end
 
 test "Ensure existance of map data" do

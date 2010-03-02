@@ -111,6 +111,7 @@ module Zombies
 				weap = generate_weapon(weapp)
 				char.push_item(weap)
 				char.push_item generate_ammo(weap.ammo, rand(15)+5) if weap.range == :ranged
+				char.location = @map.start_loc
 			}	
 		end
 		def get_map_pregame

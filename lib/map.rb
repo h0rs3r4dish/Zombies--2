@@ -8,7 +8,7 @@ module Zombies
 		def initialize
 			self.start_text = ''
 			self.objective = ''
-			self.conditions = []
+			self.conditions = {}
 			self.start_loc = ''
 			self.map = { }
 		end
