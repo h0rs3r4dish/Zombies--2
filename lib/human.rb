@@ -5,10 +5,11 @@ lib/human.rb -- Human creature
 module Zombies
 
 	class Human < Creature
-		attr_reader :inventory
+		attr_reader :inventory, :name
 		attr_accessor :location
-		def initialize
+		def initialize(name)
 			super
+			@name = name
 			@stats = {
 				:str => rand(10)+1, :dex => rand(10)+1, :luk => rand(10)+1
 			}

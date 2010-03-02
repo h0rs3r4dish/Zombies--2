@@ -12,6 +12,7 @@ module Zombies
 			@players = { }
 			@prefs = { }
 			@zombies = { }
+			@groups = { }
 			@map = nil
 		end
 		
@@ -112,16 +113,31 @@ module Zombies
 				char.push_item(weap)
 				char.push_item generate_ammo(weap.ammo, rand(15)+5) if weap.range == :ranged
 				char.location = @map.start_loc
-			}	
+			}
+			leader = @players.keys[rand(@players.length)]
+			@groups[leader] = @players.keys
+			return leader
 		end
-		def get_map_pregame
+		def map_pregame
 			return { :start_text => @map.start_text,
 				:objective => @map.objective }
+		end
+		def map_exits(loc)
+			return @map.map[loc][:exits]
+		end
+		def map_look(loc)
+			return false if not @map.map.key? loc
+			obj = @map.map[loc]
+			return { :name => obj[:name],
+				:desc => obj[:desc],
+				:creatures => obj[:creatures],
+				:items => obj[:items]
+			}
 		end
 		
 		def add_player(name)
 			return false if @players.key? name
-			@players[name] = Human.new
+			@players[name] = Human.new(name)
 			@prefs[name] = Hash.new
 			return name
 		end
@@ -153,12 +169,45 @@ module Zombies
 		def spawn_zombie(id, count=1)
 			count.times do
 				name = "z%03d" % (rand(999)+1)
-				@zombies[name] = Human.new
+				@zombies[name] = Human.new(name)
 			end
+		end
+		
+		def groups
+			return @groups.keys
+		end
+		def group_list(leader)
+			return @groups[leader]
+		end
+		def group_move(leader,dir)
+			ret = nil
+			@groups[leader].each { |char|
+				ret = player_move(char, dir)
+				return ret if ret.first == false
+			}
+			return ret
 		end
 		
 		def player_inventory(name)
 			return (@players.key? name) ? @players[name].inventory : false
+		end
+		def player_group(name)
+			@groups.each_pair { |leader, list|
+				return leader if list.include? name
+			}
+			return false
+		end
+		def player_move(name,dir)
+			return [ false, :player ] if not @players.key? name
+			playerloc = @players[name].location
+			dir = dir.downcase.intern
+			return [ false, :exit ] if not map_exits(playerloc).include? dir
+			newloc = map_exits(playerloc)[dir]
+			@players[name].location = newloc
+			@map.map[newloc][:creatures].delete @players[name]
+			ret = [ true, map_look(newloc) ]
+			newobj[:creatures].push @players[name]
+			return ret
 		end
 	end
 	

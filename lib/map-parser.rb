@@ -14,11 +14,12 @@ module Zombies
 			return IO.readlines(@file)
 		end
 		def parse(text)
-			loc = Hash.new
+			loc = { :exits => { }, :creatures => [ ] }
 			id = ''
 			state = :meta
-			text.each { |line| line.strip!
-				next if line[0].chr == "#"
+			text.each { |line|
+				next if line =~ /^[\s\t]*#/
+				line.strip!
 				if [ :meta, :conditions ].include? state then
 					case line
 						when /^start-text: (.+)$/
@@ -31,7 +32,7 @@ module Zombies
 							state = :conditions
 						when /^area ([0-9]+):/
 							@map.map[id] = loc unless id == ''
-							loc = Hash.new
+							loc = { :exits => { }, :creatures => [ ] }
 							id = $1
 							state = :area
 						when /([^\s]+): (.+)$/
@@ -42,15 +43,19 @@ module Zombies
 					end
 				elsif state == :area
 					case line
+						when /^desc: (.+)$/
+							loc[:desc] = $1
+						when /^name: (.+)$/
+							loc[:name] = $1
 						when /^zombies: (.+)$/
 							loc[:zombies] = ($1.downcase == 'none') ? 0 : $1.to_i
 						when /^items: (.+)$/
 							loc[:item_template] = $1.split(',').map { |i| i.strip }
 						when /^([^:]+): (.+)$/
-							loc[$1.intern] = $2
+							loc[:exits][$1.intern] = $2
 						when /^area ([0-9]+):/
 							@map.map[id] = loc unless id == ''
-							loc = Hash.new
+							loc = { :exits => { } }
 							id = $1
 							state = :area
 					end

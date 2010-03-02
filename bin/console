@@ -112,10 +112,11 @@ endHelp
 					if ret then
 						$ingame = true
 						puts "Loading map %s...\n\n" % ret.last
-						$zombies.map_setup
-						text = $zombies.get_map_pregame
+						leader = $zombies.map_setup
+						text = $zombies.map_pregame
 						puts text[:start_text]
 						puts "\nObjective: %s" % text[:objective]
+						puts "Party leader: %s" % leader
 					else
 						puts "No maps/players in the game."
 					end
@@ -137,6 +138,27 @@ endHelp
 							when :ammo
 								i.name + (" x%d" % i.count)
 						end }.join(', ')
+					end
+				when /^go (.+)$/
+					ret = $zombies.group_move( $zombies.groups.first, $1 )
+					if ret.first == true then
+						data = ret.last
+						puts "%s - %s" % [ data[:name], data[:desc] ]
+						list = { :players => [ ], :zed => [ ] }
+						data[:creatures].each { |c|
+							if c.name =~ /^z\d{3}$/ then
+								list[:zed].push c.name
+							else
+								list[:creatures].push c.name
+							end
+						}
+						list[:creatures].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
+						puts "%s %s here." % [
+							list[:creatures].join(', '),
+							(list[:creatures].length > 1) ? "are" : "is"
+						]
+					else
+						puts ret.last
 					end
 				else
 					puts "Unrecognized command"

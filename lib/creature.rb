@@ -8,7 +8,7 @@ module Zombies
 
 	class Creature
 		attr_reader :stats
-		def initialize
+		def initialize(*args)
 			@anatomy = {
 				:head => { :neck => Damage.first, :face => Damage.first },
 				:torso => { :head => Damage.first }
