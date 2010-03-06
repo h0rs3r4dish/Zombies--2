@@ -54,6 +54,9 @@ module Zombies
 		def initialize(name='',type=:item)
 			self.name = name; self.type=type
 		end
+		def print
+			return self.name
+		end
 	end
 	
 	class Weapon < Item
@@ -74,6 +77,9 @@ module Zombies
 			self.type = :ammo
 			self.kind = kind
 			self.count = count
+		end
+		def print
+			return "%s x%d" % [self.name, self.count]
 		end
 	end
 	

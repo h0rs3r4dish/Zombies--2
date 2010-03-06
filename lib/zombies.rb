@@ -82,7 +82,7 @@ module Zombies
 						end
 						count.times {
 							itm = nil
-							case template.downcase
+							case type.downcase
 								when "weapon"
 									itm = generate_weapon
 								when "melee"
