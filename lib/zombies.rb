@@ -94,7 +94,7 @@ module Zombies
 								when "gun with ammo"
 									itm = generate_weapon :ranged
 									items.push itm
-									itm = generate_ammo itm.ammo
+									itm = generate_ammo itm.ammo, rand(17)+3
 							end
 							items.push itm
 						}
