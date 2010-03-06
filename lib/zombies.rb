@@ -94,7 +94,7 @@ module Zombies
 								when "gun with ammo"
 									itm = generate_weapon :ranged
 									items.push itm
-									itm = generate_ammo itm.ammo, rand(17)+3
+									itm = generate_ammo itm.ammo, rand(18)+3
 							end
 							items.push itm
 						}
@@ -114,6 +114,7 @@ module Zombies
 				char.push_item generate_ammo(weap.ammo, rand(15)+5) if weap.range == :ranged
 				char.location = @map.start_loc
 			}
+			map_update_locations
 			leader = @players.keys[rand(@players.length)]
 			@groups[leader] = @players.keys
 			return leader
@@ -121,6 +122,13 @@ module Zombies
 		def map_pregame
 			return { :start_text => @map.start_text,
 				:objective => @map.objective }
+		end
+		def map_update_locations
+			[ @players, @zombies ].each { |list|
+				list.each_value { |c|
+					@map.map[c.location][:creatures].push c
+				}
+			}
 		end
 		def map_exits(loc)
 			return @map.map[loc][:exits]
@@ -172,6 +180,7 @@ module Zombies
 			count.times do
 				name = "z%03d" % (rand(999)+1)
 				@zombies[name] = Human.new(name)
+				@zombies[name].location = id
 			end
 		end
 		
