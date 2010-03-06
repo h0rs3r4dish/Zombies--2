@@ -117,6 +117,23 @@ endHelp
 						puts text[:start_text]
 						puts "\nObjective: %s" % text[:objective]
 						puts "Party leader: %s" % leader
+						dat = $zombies.map_look($zombies.group_location(leader))
+						puts "%s - %s" % [ dat[:name], dat[:desc] ]
+						list = { :players => [ ], :zed => [ ] }
+						dat[:creatures].each { |c|
+							if c.name =~ /^z\d{3}$/ then
+								list[:zed].push c.name
+							else
+								list[:players].push c.name
+							end
+						}
+						list[:players].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
+						puts "%s %s here." % [
+							((list[:players].length > 0) ? list[:players].join(', ') : "Nobody"),
+							(list[:players].length > 1) ? "are" : "is"
+						]
+						puts "You can go %s." % ((dat[:exits].length > 0) ?
+							dat[:exits].keys.map { |k| k.to_s }.join(', ') : "nowhere")
 					else
 						puts "No maps/players in the game."
 					end
@@ -149,16 +166,18 @@ endHelp
 							if c.name =~ /^z\d{3}$/ then
 								list[:zed].push c.name
 							else
-								list[:creatures].push c.name
+								list[:players].push c.name
 							end
 						}
-						list[:creatures].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
+						list[:players].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
 						puts "%s %s here." % [
-							list[:creatures].join(', '),
-							(list[:creatures].length > 1) ? "are" : "is"
+							list[:players].join(', '),
+							(list[:players].length > 1) ? "are" : "is"
 						]
+						puts "You can go %s." % ((data[:exits].length > 0) ?
+							data[:exits].keys.map { |k| k.to_s }.join(', ') : "nowhere")
 					else
-						puts ret.last
+						puts "Couldn't move due to '%s'." % ret.last
 					end
 				else
 					puts "Unrecognized command"

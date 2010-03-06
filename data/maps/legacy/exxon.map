@@ -23,7 +23,7 @@ area 02:
 	zombies: 1
 	north: 03
 	east: 04
-	weast: 01
+	west: 01
 
 area 03:
 	name: Bathroom

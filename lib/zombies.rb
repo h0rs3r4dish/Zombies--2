@@ -128,10 +128,12 @@ module Zombies
 		def map_look(loc)
 			return false if not @map.map.key? loc
 			obj = @map.map[loc]
-			return { :name => obj[:name],
+			return {
+				:name => obj[:name],
 				:desc => obj[:desc],
 				:creatures => obj[:creatures],
-				:items => obj[:items]
+				:items => obj[:items],
+				:exits => obj[:exits]
 			}
 		end
 		
@@ -179,6 +181,9 @@ module Zombies
 		def group_list(leader)
 			return @groups[leader]
 		end
+		def group_location(leader)
+			return @players[leader].location
+		end
 		def group_move(leader,dir)
 			ret = nil
 			@groups[leader].each { |char|
@@ -204,9 +209,9 @@ module Zombies
 			return [ false, :exit ] if not map_exits(playerloc).include? dir
 			newloc = map_exits(playerloc)[dir]
 			@players[name].location = newloc
-			@map.map[newloc][:creatures].delete @players[name]
+			@map.map[playerloc][:creatures].delete @players[name]
 			ret = [ true, map_look(newloc) ]
-			newobj[:creatures].push @players[name]
+			@map.map[newloc][:creatures].push @players[name]
 			return ret
 		end
 	end

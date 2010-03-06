@@ -55,7 +55,7 @@ module Zombies
 							loc[:exits][$1.intern] = $2
 						when /^area ([0-9]+):/
 							@map.map[id] = loc unless id == ''
-							loc = { :exits => { } }
+							loc = { :exits => { }, :creatures => [ ] }
 							id = $1
 							state = :area
 					end
