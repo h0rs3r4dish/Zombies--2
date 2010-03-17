@@ -2,6 +2,8 @@
 
 testname = ARGV.first or 'all'
 
+STDOUT.sync = true # Print after every p/print/puts, even without newlines
+
 # Some helper functions
 def test(text,&block)
 	print text + '...'
