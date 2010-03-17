@@ -34,17 +34,17 @@ end
 test "Verify $test contents" do
 	$test.each_pair { |k, v|
 		rv = $parser.map[k]
-		raise "%s is '%s', should be '%s'" % [k,rv,v] unless rv == v
+		assert rv == v, "#{k} is '#{rv}', should be '#{v}'"
 	}
 end
 
 test "Verify conditions" do
 	time = $parser.map.conditions[:time_limit]
-	raise "time-limit is '%s', should have been 10" % time unless time == 10
+	assert time == 10, "time-limit is '#{time}', should have been 10"
 end
 
 test "Ensure existance of map data" do
-	raise "No map" unless $parser.map.map
+	assert $parser.map.map
 	print "\n\tMap dump: "; p $parser.map.map
 	print "..."
 end
@@ -52,9 +52,9 @@ end
 test "Verify $parser.map.map['01'] (area 01)" do
 	map = $parser.map.map["01"]
 	zed = map[:zombies]
-	raise ":zombies should be 0, is '%s'" % zed unless zed == 0
+	assert zed == 0, ":zombies should be 0, is '#{zed}'" 
 	weap = map[:weapons]
-	raise ":weapons should be 'none', is '%s'" % weap unless weap == "none"
+	assert weap == "none", ":weapons should be 'none', is '#{weap}'"
 	east = map[:east]
-	raise ":east should be '01', is '%s'" % east unless east == "01"
+	assert east == "01", ":east should be '01', is '#{east}'"
 end

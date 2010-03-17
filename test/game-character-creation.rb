@@ -16,5 +16,5 @@ end
 
 test "Check player list" do
 	pl = $z.list_players
-	raise "Player list was '%s', should have been '%s'" % [pl.inspect, List.inspect] unless pl == List
+	assert pl == List, "Player list is '#{pl.inspect}', should be '#{List.inspect}'"
 end

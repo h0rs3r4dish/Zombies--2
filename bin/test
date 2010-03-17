@@ -2,10 +2,14 @@
 
 testname = ARGV.first or 'all'
 
+# Some helper functions
 def test(text,&block)
 	print text + '...'
 	block.call
 	puts "OK"
+end
+def assert(bool,message='')
+	raise message if not bool
 end
 
 if testname == 'all' then
