@@ -19,7 +19,7 @@ conditions:
 	time-limit: 10
 area 01:
 	zombies: none
-	weapons: none
+	items: none
 	east: 01
 eof
 
@@ -53,8 +53,8 @@ test "Verify $parser.map.map['01'] (area 01)" do
 	map = $parser.map.map["01"]
 	zed = map[:zombies]
 	assert zed == 0, ":zombies should be 0, is '#{zed}'" 
-	weap = map[:weapons]
-	assert weap == "none", ":weapons should be 'none', is '#{weap}'"
-	east = map[:east]
+	weap = map[:item_template]
+	assert weap == ["none"], ":item_templates should be '[none]', is '#{weap}'"
+	east = map[:exits][:east]
 	assert east == "01", ":east should be '01', is '#{east}'"
 end
