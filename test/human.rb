@@ -14,7 +14,7 @@ test "Hacking variables" do
 end
 
 test "Create human" do
-	$obj = Zombies::Human.new
+	$obj = Zombies::Human.new('newhuman')
 end
 
 test "Damage left forearm" do

@@ -14,9 +14,16 @@ def assert(bool,message='')
 	raise message if not bool
 end
 
+
 if testname == 'all' then
+	$ignore = if File.exist? 'test/.ignore' then
+			File.read('test/.ignore').split("\n")
+		else
+			Array.new
+		end
 	files = Dir['test/*']
 	files.each { |file|
+		next if $ignore.include? file
 		puts "---- Running %s" % file
 		load file		
 		print "\n\n" unless file == files.last
