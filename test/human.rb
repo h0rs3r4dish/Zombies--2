@@ -29,8 +29,9 @@ test "Chop off left leg at the knee" do
 	$obj.damage :left_knee, :melee, 3
 end
 
-test "Status of human" do
-	print "\n\tReturned hash: "
-	p $obj.status
-	print "..."
+test "Status of human is expected" do
+	expected = { :right_arm=>:gone, :left_forearm=>:damaged, :left_knee=>:gone,
+		:left_shin=>:gone, :left_foot=>:gone }
+	assert($obj.status == expected, "\n\tUnexpected result:\n\t" +
+		"#{$obj.status.inspect}\n\tShould have been...\n\t#{expected.inspect}")
 end
