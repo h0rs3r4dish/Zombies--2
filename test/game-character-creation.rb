@@ -6,15 +6,8 @@ require 'zombies-two'
 
 List = %w{kidko hr4dish}
 
-test "Create Zombies::Game" do
-	$z = Zombies::Game.new
-end
-
-test "Add players" do
-	List.each { |name| $z.add_player name }
-end
-
-test "Check player list" do
-	pl = $z.list_players
-	assert pl == List, "Player list is '#{pl.inspect}', should be '#{List.inspect}'"
+test "Zombies::Game players" do
+	game = Zombies::Game.new
+	List.each { |name| game.add_player name }
+	assert game.list_players == List
 end

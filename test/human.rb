@@ -2,36 +2,37 @@
 test/human.rb -- Zombies::Human unit test
 =end
 
-test "Loading libraries" do
-	require "lib/creature"
-	require "lib/human"
-end
+require "lib/creature"
+require "lib/human"	
 
-test "Hacking variables" do
-	module Zombies; class Human;
-		attr_accessor :anatomy
-	end; end
-end
+module Zombies; class Human;
+	attr_accessor :anatomy
+end; end
 
-test "Create human" do
-	$obj = Zombies::Human.new('newhuman')
-end
+Item = Struct.new(:name)
 
-test "Damage left forearm" do
-	$obj.damage :left_forearm
-end
-
-test "Chop off right arm" do
-	$obj.damage :right_shoulder, :melee, 3
-end
-
-test "Chop off left leg at the knee" do
-	$obj.damage :left_knee, :melee, 3
-end
-
-test "Status of human is expected" do
-	expected = { :right_arm=>:gone, :left_forearm=>:damaged, :left_knee=>:gone,
-		:left_shin=>:gone, :left_foot=>:gone }
-	assert($obj.status == expected, "\n\tUnexpected result:\n\t" +
-		"#{$obj.status.inspect}\n\tShould have been...\n\t#{expected.inspect}")
+test "Zombies::Human" do
+	human = Zombies::Human.new('newhuman')
+	assert human.name == 'newhuman'
+	human.damage :left_forearm
+	hsa = human.status
+	assert hsa
+	assert hsa[:left_forearm] == :damaged
+	human.damage :right_shoulder, :melee, 3
+	hsb = human.status
+	assert hsb
+	assert hsb[:right_arm] == :gone
+	assert_not hsb == hsa
+	human.damage :left_knee, :melee, 3
+	hsc = human.status
+	assert hsc
+	assert hsc[:left_knee] == :gone
+	assert hsc[:left_shin] == :gone
+	assert hsc[:left_foot] == :gone
+	assert_not hsc == hsb
+	assert_not hsc == hsb
+	itm = Item.new 'brick'
+	human.push_item itm
+	assert human.has_item? 'brick'
+	assert human.pop_item('brick') == itm
 end
