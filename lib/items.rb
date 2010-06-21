@@ -48,6 +48,30 @@ module Zombies
 				}
 			end
 		end
+		def infer_item(string)
+			Items.each_value { |list|
+				list.each { |weapon|
+					return weapon.first if weapon.first =~ /#{string}/i
+				}
+			}
+			return false
+		end
+		def item_at(name, location)
+			@map.map[location][:items].each { |s|
+				s if s.name == name
+			}
+			return false
+		end
+		def player_pickup_item(nick, itemstring)
+			itemname = infer_item(itemstring)
+			location = @players[nick].location
+			item = item_at itemname, location
+			return false unless item
+			items = @map.map[loc][:items]
+			items.delete items
+			@players[nick].push_item item
+			return item
+		end
 	end
 	
 	Item = Struct.new(:name, :type) do
