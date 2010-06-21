@@ -8,6 +8,48 @@ puts "Zombies! 2 -- demo game console" % Zombies::VERSION
 
 $ingame  = false
 
+def current_loc
+	$zombies.group_location $zombies.groups.first
+end
+def look_at_location(loc)
+	dat = $zombies.map_look(loc)
+	clen = (dat[:creatures] != nil) ? dat[:creatures].length : 0
+	ilen = (dat[:items] != nil) ? dat[:items].length : 0
+	if clen == 0 and ilen == 0 then
+		puts "You see nothing interesting."
+	else
+		print "You see "
+		print "%s creature#{(clen > 1) ? 's' : ''}" % clen if clen > 0
+		if ilen > 0 then
+			print " and" if clen > 0
+			print " %s item#{(ilen > 1) ? 's' : '' }" % ilen
+		end
+		puts "."
+	end
+end
+def look_at_current
+	dat = $zombies.map_look(current_loc)
+	puts "%s - %s" % [ dat[:name], dat[:desc] ]
+	puts "Items here: #{
+		dat[:items].map { |i| i.print }.join(', ')
+	}" if dat[:items] != nil
+	list = { :players => [ ], :zed => [ ] }
+	dat[:creatures].each { |c|
+		if c.name =~ /^z\d{3}$/ then
+			list[:zed].push c.name
+		else
+			list[:players].push c.name
+		end
+	}
+	list[:players].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
+	puts "%s %s here." % [
+		((list[:players].length > 0) ? list[:players].join(', ') : "Nobody"),
+		(list[:players].length > 1) ? "are" : "is"
+	]
+	puts "You can go %s." % ((dat[:exits].length > 0) ?
+		dat[:exits].keys.map { |k| k.to_s }.join(', ') : "nowhere")
+end
+
 print "% "
 while gets
 	inp = $_
@@ -117,23 +159,7 @@ endHelp
 						puts text[:start_text]
 						puts "\nObjective: %s" % text[:objective]
 						puts "Party leader: %s" % leader
-						dat = $zombies.map_look($zombies.group_location(leader))
-						puts "%s - %s" % [ dat[:name], dat[:desc] ]
-						list = { :players => [ ], :zed => [ ] }
-						dat[:creatures].each { |c|
-							if c.name =~ /^z\d{3}$/ then
-								list[:zed].push c.name
-							else
-								list[:players].push c.name
-							end
-						}
-						list[:players].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
-						puts "%s %s here." % [
-							((list[:players].length > 0) ? list[:players].join(', ') : "Nobody"),
-							(list[:players].length > 1) ? "are" : "is"
-						]
-						puts "You can go %s." % ((dat[:exits].length > 0) ?
-							dat[:exits].keys.map { |k| k.to_s }.join(', ') : "nowhere")
+						look_at_current
 					else
 						puts "No maps/players in the game."
 					end
@@ -145,7 +171,7 @@ endHelp
 					puts "Unrecognized command"
 			end
 		else
-			case line
+			case line.strip
 				when /^inventory (.+)$/
 					ret = $zombies.player_inventory($1)
 					if not ret then
@@ -161,27 +187,19 @@ endHelp
 				when /^go (.+)$/
 					ret = $zombies.group_move( $zombies.groups.first, $1 )
 					if ret.first == true then
-						data = ret.last
-						puts "%s - %s" % [ data[:name], data[:desc] ]
-						list = { :players => [ ], :zed => [ ] }
-						data[:creatures].each { |c|
-							if c.name =~ /^z\d{3}$/ then
-								list[:zed].push c.name
-							else
-								list[:players].push c.name
-							end
-						}
-						list[:players].push("and %s zombie(s)" % list[:zed].length) if list[:zed].length > 0
-						puts "%s %s here." % [
-							list[:players].join(', '),
-							(list[:players].length > 1) ? "are" : "is"
-						]
-						puts "Items here: %s" % data[:items].map { |i| i.print }.join(', ') if data.key? :items and data[:items].class == Array
-						puts "You can go %s." % ((data[:exits].length > 0) ?
-							data[:exits].keys.map { |k| k.to_s }.join(', ') : "nowhere")
+						look_at_current
 					else
 						puts "Couldn't move due to '%s'." % ret.last
 					end
+				when 'look'
+					look_at_current
+				when /^look (.+)$/
+					look_at_location $zombies.map_exits(current_loc)[$1.intern]
+				when 'zombies'
+					zombie_list = $zombies.zombies_at(current_loc)
+					puts "Zombies: #{
+						(zombie_list.length > 0) ? zombie_list.join(', ') : 'None'
+					}"
 				else
 					puts "Unrecognized command"
 			end

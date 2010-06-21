@@ -223,6 +223,14 @@ module Zombies
 			@map.map[newloc][:creatures].push @players[name]
 			return ret
 		end
+		
+		def zombies_at(loc)
+			@zombies.values.select { |z|
+				z.location == loc
+			}.map { |z|
+				z.name
+			} or [ ]
+		end
 	end
 	
 end
