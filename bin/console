@@ -14,11 +14,11 @@ while gets
 	inp = (inp.include? ';') ? inp.split(';').map { |l| l.strip } : [ inp ]
 	inp.each { |line|
 		Process.exit if line =~ /^exit$/
-		if line =~ /^eval (.+)$/; then; begin; puts eval($1); rescue; end; end
+		if line =~ /^eval (.+)$/; then; begin; puts eval($1); rescue; end; next; end
 		# ^ comment that line out to disable the "eval" code execution command
 		if not $ingame then
-			case line
-				when /^help$/
+			case line.strip
+				when 'help'
 					puts <<endHelp
 Zombies! 2 demo console, running version #{Zombies::VERSION}
 Commands:
@@ -107,7 +107,7 @@ endHelp
 					else
 						puts "No such player or setting."
 					end				
-				when /^start-game$/
+				when 'start-game'
 					ret = $zombies.load_next_map
 					if ret then
 						$ingame = true
@@ -137,8 +137,10 @@ endHelp
 					else
 						puts "No maps/players in the game."
 					end
-				when /^player-list$/
+				when 'player-list'
 					puts $zombies.list_players.join(', ')
+				when 'map-list'
+					puts $zombies.list_maps.map { |m| m.join(':') }.join(', ')
 				else
 					puts "Unrecognized command"
 			end
