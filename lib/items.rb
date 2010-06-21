@@ -72,6 +72,14 @@ module Zombies
 			@players[nick].push_item item
 			return item
 		end
+		def player_drop_item(nick, itemstring)
+			itemname = infer_item(itemstring)
+			player = @players[nick]
+			return false unless player.has_item? itemname
+			item = player.pop_item itemname
+			@map.map[loc][:items].push(item)
+			return item
+		end
 	end
 	
 	Item = Struct.new(:name, :type) do
