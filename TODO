@@ -1,9 +1,7 @@
 Before 1.0
 ==========
 
-- Pick up items
-- Drop items
-- Trade items with players
+- Implement the above in dev console
 - Zombie movement
 - Combat
 
