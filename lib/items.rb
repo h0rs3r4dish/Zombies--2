@@ -80,6 +80,22 @@ module Zombies
 			@map.map[loc][:items].push(item)
 			return item
 		end
+		def player_trade_item(fromnick, tonick, itemstring, amount=:all)
+			itemname = infer_item(itemstring)
+			from = @players[fromnick]
+			return false unless from.has_item? itemstring
+			to = @players[fromnick]
+			item = from.pop_item(itemstring)
+			if item.type == :ammo and amount != :all then
+				new_item = Ammo.new(item.name, item.kind, amount)
+				item.count -= amount
+				to.push_item new_item
+				return new_item
+			else
+				to.push_item item
+				return item
+			end
+		end
 	end
 	
 	Item = Struct.new(:name, :type) do
