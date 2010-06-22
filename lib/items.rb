@@ -58,7 +58,7 @@ module Zombies
 		end
 		def item_at(name, location)
 			@map.map[location][:items].each { |s|
-				s if s.name == name
+				return s if s.name == name
 			}
 			return false
 		end
@@ -67,7 +67,7 @@ module Zombies
 			location = @players[nick].location
 			item = item_at itemname, location
 			return false unless item
-			items = @map.map[loc][:items]
+			items = @map.map[location][:items]
 			items.delete items
 			@players[nick].push_item item
 			return item

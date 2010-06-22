@@ -191,6 +191,13 @@ endHelp
 					else
 						puts "Couldn't move due to '%s'." % ret.last
 					end
+				when /^take-item ([^\s]+) (.+)$/
+					ret = $zombies.player_pickup_item($1, $2)
+					if not ret then
+						puts "That item's not there."
+					else
+						puts "%s picked up %s" % [ $1, ret.print ]
+					end
 				when 'look'
 					look_at_current
 				when /^look (.+)$/
