@@ -4,8 +4,9 @@ Zombies! 2
 The successor to the Zombies! IRC game (run by the Quander bot), this is a more
 advanced and platform-independant derivative.
 
-If you want to get a feel for the game or learn how to play, see the included
-`handbook.md`, which contains the text of "Zombies! 2 Survival Handbook."
+If you want to get a feel for the game or learn how to play, browse through the
+`docs` directory, especially `docs/handbook.md`, which contains the text of
+"Zombies! 2 Survival Handbook."
 
 Usage
 -----
@@ -15,7 +16,7 @@ a decent frontend. There *is* a simple console that can be run via:
 
 	$ ruby bin/console
 	
-This provides a simple wrapper for the Zombies::Game class, and can be seen as
+This provides a simple wrapper for the `Zombies::Game` class, and can be seen as
 an example on which to build your own. As long as the provider has access to the
 object, any sort of medium can be used for play.
 
@@ -29,8 +30,8 @@ overview of what you'll be looking at.
 * __Revamped damage system__ that is both more concise ("right arm is gone"
   instead of a lot of subparts) and more parts
 * __New items__ that you have never seen before -- including automatic weapons!
-* __Updated map files__ that are easier to write and read, while still holding
-  all the features needed.
+* __Updated map files__ that are easier to write and read, despite offering more
+  options (see `docs/map-making.md` for a guide)
 
 
 Tests
