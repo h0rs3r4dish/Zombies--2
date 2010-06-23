@@ -8,7 +8,9 @@ def test(desc, &block)
 	result = :pass
 	print desc
 	begin; block.call
-	rescue; result = :fail; print 'F'
+	rescue Exception => e
+		result = :fail; print 'F'
+		$_exceptionlist.push e
 	ensure; $_testcount[result] += 1
 	end
 end
@@ -20,14 +22,16 @@ def assert_not(bool, message='')
 end
 def assert_error(message='', &block)
 	begin; block.call
-	rescue; _pass_assert
+	rescue Exception => e
+		_pass_assert; $_exceptionlist.push e
 	else; _fail_assert
 	end
 end
 def assert_not_error(message='', &block)
 	begin; block.call
 	rescue; _fail_assert
-	else; _pass_assert
+	rescue Exception => e
+		_pass_assert; $_exceptionlist.push e
 	end;
 end
 def silently(&block)
@@ -47,17 +51,24 @@ def _print_assert_results
 	asserttotal = $_assertcount[:pass] + $_assertcount[:fail]
 	puts "\n%d/%d assertions passed (%d failed)" % [ $_assertcount[:pass], asserttotal,
 		$_assertcount[:fail] ]
-$_assertcount = { :pass => 0, :fail => 0 }
+	$_assertcount = { :pass => 0, :fail => 0 }
 end
 def _print_test_results
 	testtotal = $_testcount[:pass] + $_testcount[:fail]
 	puts "%d/%d tests passed (%d failed)" % [ $_testcount[:pass], testtotal,
 		$_testcount[:fail] ]
+	puts "Errors:\n- %s" % $_exceptionlist.map { |e|
+		[e.message, e.backtrace[0..1].map { |s|
+			s.split('/')[-2..-1].join('/')
+		} ].join("\n\t")
+	}.join("\n- ") if $_exceptionlist.length > 0
+	$_exceptionlist = Array.new
 	$_testcount = { :pass => 0, :fail => 0 }
 end
 
 $_testcount = { :pass => 0, :fail => 0 }
 $_assertcount = { :pass => 0, :fail => 0 }
+$_exceptionlist = Array.new
 
 if testname == 'all' then
 	ignorelist = if File.exist? 'test/.ignore' then
