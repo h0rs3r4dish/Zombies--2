@@ -68,7 +68,7 @@ module Zombies
 			item = item_at itemname, location
 			return false unless item
 			items = @map.map[location][:items]
-			items.delete items
+			items.delete item
 			@players[nick].push_item item
 			return item
 		end
@@ -77,14 +77,14 @@ module Zombies
 			player = @players[nick]
 			return false unless player.has_item? itemname
 			item = player.pop_item itemname
-			@map.map[loc][:items].push(item)
+			@map.map[player.location][:items].push(item)
 			return item
 		end
 		def player_trade_item(fromnick, tonick, itemstring, amount=:all)
 			itemname = infer_item(itemstring)
 			from = @players[fromnick]
 			return false unless from.has_item? itemstring
-			to = @players[fromnick]
+			to = @players[tonick]
 			item = from.pop_item(itemstring)
 			if item.type == :ammo and amount != :all then
 				new_item = Ammo.new(item.name, item.kind, amount)
