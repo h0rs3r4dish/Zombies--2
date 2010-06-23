@@ -34,7 +34,6 @@ module Zombies;	class Game
 end; end
 
 test "Item operations" do
-
 	game = Zombies::Game.new
 	# Double-check that the mock stuff worked
 	assert game.class.to_s == "Zombies::Game"
@@ -61,25 +60,38 @@ test "Item operations" do
 		assert player.location == '01'
 	}
 	
+	# Make sure infer_item works
+	assert game.infer_item("axe") == "Axe"
+	assert game.infer_item("Axe") == "Axe"
+	assert game.infer_item("nato") == "5.56mm NATO rounds"
+	assert game.infer_item("5.56mm") == "5.56mm NATO rounds"
+	assert game.infer_item("rifle") == "Hunting Rifle"
+	assert_not game.infer_item("rifle") == "Assault Rifle"
+	
+	# Ensure we have the Zombies::Weapon class and that it's working right
 	assert Zombies::Weapon
 	weapon = Zombies::Weapon.new('Machete')
 	assert weapon
 	assert_not alpha.has_item? weapon.name
 	assert_not bravo.has_item? weapon.name
 	
+	# Add a weapon
 	maploc = game.map.map['01']
 	maploc[:items].push weapon
 	assert maploc[:items].include? weapon
 	
+	# Test picking up the weapon
 	assert game.player_pickup_item('alpha', weapon.name)
 	assert_not maploc[:items].include? weapon
 	assert alpha.has_item? weapon.name
 	assert_not bravo.has_item? weapon.name
 	
+	# Drop the weapon
 	assert game.player_drop_item('alpha', weapon.name)
 	assert maploc[:items].include? weapon
 	assert_not alpha.has_item? weapon.name
 	
+	# Trade the weapon
 	assert game.player_pickup_item('bravo', weapon.name)
 	assert_not maploc[:items].include? weapon
 	assert bravo.has_item? weapon.name

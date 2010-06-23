@@ -198,6 +198,28 @@ endHelp
 					else
 						puts "%s picked up %s" % [ $1, ret.print ]
 					end
+				when /^drop-item ([^\s]+) (.+)$/
+					ret = $zombies.player_drop_item($1, $2)
+					if not ret then
+						puts "%s doesn't have that." % $1
+					else
+						puts "%s dropped %s" % [ $1, ret.print ]
+					end
+				when /^trade-item ([^\s]+) ([^\s]+) (.+)$/
+					to = $2
+					from = $1
+					count = :all
+					str = $3
+					if str =~ /^(\d+)\s(.+)$/ then
+						str = $2
+						count = $1.to_i
+					end
+					ret = $zombies.player_trade_item(from, to, str, count)
+					if not ret then
+						puts "%s can't trade that." % from
+					else
+						puts "%s got %s from %s" % [ to, ret.print, from ]
+					end
 				when 'look'
 					look_at_current
 				when /^look (.+)$/
