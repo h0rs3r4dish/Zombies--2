@@ -236,6 +236,7 @@ module Zombies
 			@groups.values.select { |g|
 				(group_location g) == loc
 			} or [ ]
+		end
 	end
 	
 end
