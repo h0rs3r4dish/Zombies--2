@@ -18,8 +18,9 @@ module Zombies
 		
 		def add_campaign(name)
 			return false if not File.exist? "data/maps/"+name
-			Dir["data/maps/"+name+"/*"].each { |e|
-				return false if not add_map(name,e.split('/')[-1].split('.')[0])
+			order = File.read("data/maps/"+name+"/index").split("\n")
+			order.each { |file|
+				return false if not add_map(name,order.split('.').first)
 			}
 			return name
 		end

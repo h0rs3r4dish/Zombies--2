@@ -4,11 +4,22 @@ Zombies! 2 Map Making
 Maps are easy to make, being only linked rooms described in plain text. This
 chapter will describe the options availible to a mapmaker.
 
-Before you begin, every map must be in some kind of campaign. All this requires
-is for the map to be stored in a subfolder of `data/maps/`; for example, all of
-the legacy maps from Zombies! 1 are in the "legacy" campaign, which can be
-found at `data/maps/legacy/`. Maps should be saved as plain text with the `.map`
-extension.
+Campaigns
+---------
+
+Before you begin, it should be pointed out that every map needs to be sorted in
+some kind of campaign. There are two steps to this:
+
+- The map needs to be in the campaign folder, a subfolder of `data/maps/`; for
+  example, all of the Zombies! 1 maps are within the "legacy" campaign. This
+  campaign's folder is `data/maps/legacy/`
+- The map name (the portion of the map before the `.map` extension) needs to
+  be entered in the campaign index, a plain text file located in the campaign
+  directory and simply called `index`. If this file doesn't exist (in the case
+  of a new campaign), it should be created.
+
+Format
+------
 
 The map format is fairly simple, and reads very much like YAML:
 
