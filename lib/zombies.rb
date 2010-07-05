@@ -180,7 +180,7 @@ module Zombies
 		def spawn_zombie(id, count=1)
 			count.times do
 				name = "z%03d" % (rand(999)+1)
-				@zombies[name] = Human.new(name)
+				@zombies[name] = Zombie.new(name)
 				@zombies[name].location = id
 			end
 		end
@@ -232,6 +232,10 @@ module Zombies
 				z.name
 			} or [ ]
 		end
+		def groups_at(loc)
+			@groups.values.select { |g|
+				(group_location g) == loc
+			} or [ ]
 	end
 	
 end
