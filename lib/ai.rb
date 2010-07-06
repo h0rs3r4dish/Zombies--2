@@ -11,11 +11,14 @@ module Zombies
 			if groups_at(zobj.location).length > 0 then
 				# There are players here
 				# Attack them, motherfucker!
+				# TODO
 			else
 				if zobj.move_yet? then
 					zobj.move
-					# Move randomly!
-					return zobj.location
+					choices = map_exits(zobj.location)
+					newloc = choices.values[rand(choices.length)]
+					zombie_move zobj.nick, newloc
+					return newloc
 				else
 					zobj.wait_a_turn
 				end
