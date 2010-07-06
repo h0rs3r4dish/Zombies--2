@@ -1,5 +1,5 @@
 =begin
-test/game.rb -- Zombies! 2 full-game metatest; runs all of the game tests
+test/game.rb -- Zombies! 2 game object metatest 
 =end
 
 Dir["test/game-*"].each { |file|
