@@ -224,6 +224,15 @@ module Zombies
 			@map.map[newloc][:creatures].push @players[name]
 			return ret
 		end
+		def zombie_move(nick, newloc)
+			return [ false, :nickname ] unless @zombies.key? nick
+			zombie = @zombies[nick]
+			oldloc = zombie.location
+			return [ false, :exit ] unless map_exits(oldloc).values.include? newloc
+			@map.map[oldloc][:creatures].delete zombie
+			@map.map[newloc][:creatures].push zombie
+			zombie.locatoin = newloc
+		end
 		
 		def zombies_at(loc)
 			@zombies.values.select { |z|
