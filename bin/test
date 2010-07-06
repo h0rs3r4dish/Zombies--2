@@ -11,7 +11,9 @@ def test(desc, &block)
 	rescue Exception => e
 		result = :fail; print 'F'
 		$_exceptionlist.push e
-	ensure; $_testcount[result] += 1
+	ensure
+		$_testcount[result] += 1
+		print "\n"
 	end
 end
 def assert(bool, message='')
@@ -49,7 +51,7 @@ def _fail_assert
 end
 def _print_assert_results
 	asserttotal = $_assertcount[:pass] + $_assertcount[:fail]
-	puts "\n%d/%d assertions passed (%d failed)" % [ $_assertcount[:pass], asserttotal,
+	puts "%d/%d assertions passed (%d failed)" % [ $_assertcount[:pass], asserttotal,
 		$_assertcount[:fail] ]
 	$_assertcount = { :pass => 0, :fail => 0 }
 end
