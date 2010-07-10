@@ -23,17 +23,17 @@ def assert_not(bool, message='')
 	bool ? _fail_assert : _pass_assert
 end
 def assert_error(message='', &block)
-	begin; block.call
+	begin
+		block.call; _fail_assert
 	rescue Exception => e
 		_pass_assert; $_exceptionlist.push e
-	else; _fail_assert
 	end
 end
 def assert_not_error(message='', &block)
-	begin; block.call
-	rescue; _fail_assert
+	begin
+		block.call; _pass_assert;
 	rescue Exception => e
-		_pass_assert; $_exceptionlist.push e
+		_fail_assert; $_exceptionlist.push e
 	end;
 end
 def silently(&block)
