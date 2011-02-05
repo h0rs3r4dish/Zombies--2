@@ -4,10 +4,10 @@ testname = ARGV.first || 'all'
 
 STDOUT.sync = true
 
-def test(desc, &block)
+def test(desc)
 	result = :pass
 	print desc
-	begin; block.call
+	begin; yield
 	rescue Exception => e
 		result = :fail; print 'F'
 		$_exceptionlist.push e
@@ -22,23 +22,23 @@ end
 def assert_not(bool, message='')
 	bool ? _fail_assert : _pass_assert
 end
-def assert_error(message='', &block)
+def assert_error(message='')
 	begin
-		block.call; _fail_assert
+		yield; _fail_assert
 	rescue Exception => e
 		_pass_assert; $_exceptionlist.push e
 	end
 end
-def assert_not_error(message='', &block)
+def assert_not_error(message='')
 	begin
-		block.call; _pass_assert;
+		yield; _pass_assert;
 	rescue Exception => e
 		_fail_assert; $_exceptionlist.push e
 	end;
 end
-def silently(&block)
+def silently
 	def puts *a; end; def print *a; end; def p *a; end;
-	block.call
+	yield
 	def puts *a; Kernel.puts *a; end
 	def print *a; Kernel.print *a; end
 	def p *a; Kernel.p *a; end
