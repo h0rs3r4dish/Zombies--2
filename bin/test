@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 testname = ARGV.first || 'all'
 
@@ -51,12 +51,18 @@ def _fail_assert
 end
 def _print_assert_results
 	asserttotal = $_assertcount[:pass] + $_assertcount[:fail]
-	puts "%d/%d assertions passed (%d failed)" % [ $_assertcount[:pass], asserttotal,
-		$_assertcount[:fail] ]
+	puts "%d/%d assertions passed (%d failed)" % [ $_assertcount[:pass],
+		asserttotal, $_assertcount[:fail] ]
+	[:pass, :fail].each { |type| 
+		$_totalassert[type] += $_assertcount[type]
+	}
 	$_assertcount = { :pass => 0, :fail => 0 }
 end
 def _print_test_results
 	testtotal = $_testcount[:pass] + $_testcount[:fail]
+	asserttotal = $_totalassert[:pass] + $_totalassert[:fail]
+	puts "\n%d/%d assertions passed (%d failed)" % [ $_totalassert[:pass],
+		asserttotal, $_totalassert[:fail] ]
 	puts "%d/%d tests passed (%d failed)" % [ $_testcount[:pass], testtotal,
 		$_testcount[:fail] ]
 	puts "Errors:\n- %s" % $_exceptionlist.map { |e|
@@ -69,6 +75,7 @@ def _print_test_results
 end
 
 $_testcount = { :pass => 0, :fail => 0 }
+$_totalassert = { :pass => 0, :fail => 0 }
 $_assertcount = { :pass => 0, :fail => 0 }
 $_exceptionlist = Array.new
 
