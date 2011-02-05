@@ -20,7 +20,7 @@ module Zombies
 			return false if not File.exist? "data/maps/"+name
 			order = File.read("data/maps/"+name+"/index").split("\n")
 			order.each { |file|
-				return false if not add_map(name,order.split('.').first)
+				return false if not add_map(name, file)
 			}
 			return name
 		end
